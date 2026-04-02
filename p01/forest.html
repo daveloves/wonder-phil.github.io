@@ -10,8 +10,8 @@
      document.addEventListener('DOMContentLoaded', () => {
         const isLocal = ['localhost','127.0.0.1','[::1]'].includes(location.hostname);
         const src = isLocal
-          ? 'http://localhost:8000/p01/IMAGES/Moving_Forest_1050_700.webp'
-          : './IMAGES/Moving_Forest_1050_700.webp';
+          ? 'https://upload.wikimedia.org/wikipedia/commons/1/1e/Sunrise_over_the_sea.jpg'
+          : 'https://upload.wikimedia.org/wikipedia/commons/1/1e/Sunrise_over_the_sea.jpg';
 
         const img = document.getElementById('forest');
         img.setAttribute('src', src);        // set it
@@ -32,7 +32,7 @@
       ></a-sky>
       <a-text
         font="kelsonsans"
-        value="HELLO A-Frame!!!"
+        value="Sunrise Sky - by Dave"
         width="6"
         position="-2.5  1.5 -2.5"  <!-- Position ! -->
       ></a-text>
