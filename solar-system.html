@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
+    <script>
+      // Sun color change component
+      AFRAME.registerComponent('sun-color-cycle', {
+        init: function () {
+          this.colors = ['#FDB813', '#FF6600', '#FF4500', '#FFD700', '#FF8C00'];
+          this.index = 0;
+          this.el.setAttribute('material', 'color', this.colors[0]);
+        },
+        tick: function (time) {
+          let index = Math.floor(time / 1500) % this.colors.length;
+          if (index !== this.index) {
+            this.index = index;
+            this.el.setAttribute('material', 'color', this.colors[index]);
+          }
+        }
+      });
+
+      // Orbit component
+      AFRAME.registerComponent('orbit', {
+        schema: {
+          radius: { type: 'number', default: 5 },
+          speed:  { type: 'number', default: 1 },
+          offset: { type: 'number', default: 0 }
+        },
+        tick: function (time) {
+          let angle = (time * 0.001 * this.data.speed) + this.data.offset;
+          let x = Math.cos(angle) * this.data.radius;
+          let z = Math.sin(angle) * this.data.radius;
+          this.el.setAttribute('position', { x: x, y: 0, z: z });
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <a-scene>
+
+      <!-- Assets / Textures -->
+      <a-assets>
+        <img id="sun-tex"     src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/The_Sun_by_the_Atmospheric_Imaging_Assembly_of_NASA%27s_Solar_Dynamics_Observatory_-_20100819.jpg/1024px-The_Sun_by_the_Atmospheric_Imaging_Assembly_of_NASA%27s_Solar_Dynamics_Observatory_-_20100819.jpg" crossorigin="anonymous">
+        <img id="mercury-tex" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Mercury_in_true_color.jpg/600px-Mercury_in_true_color.jpg" crossorigin="anonymous">
+        <img id="venus-tex"   src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Venus-real_color.jpg/1024px-Venus-real_color.jpg" crossorigin="anonymous">
+        <img id="earth-tex"   src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/The_Blue_Marble_%28remastered%29.jpg/1024px-The_Blue_Marble_%28remastered%29.jpg" crossorigin="anonymous">
+        <img id="mars-tex"    src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/OSIRIS_Mars_true_color.jpg/1024px-OSIRIS_Mars_true_color.jpg" crossorigin="anonymous">
+        <img id="stars-tex"   src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/VAN_GOGH_STARRY_NIGHT.jpg/1280px-VAN_GOGH_STARRY_NIGHT.jpg" crossorigin="anonymous">
+      </a-assets>
+
+      <!-- Starfield background -->
+      <a-sky src="#stars-tex" radius="500"></a-sky>
+
+      <!-- Lighting -->
+      <a-light type="ambient" color="#333"></a-light>
+      <a-light type="point" color="#FFF8E7" intensity="2" position="0 0 0"></a-light>
+
+      <!-- Sun (at center) -->
+      <a-sphere id="sun"
+        position="0 0 0"
+        radius="2"
+        src="#sun-tex"
+        sun-color-cycle
+        animation="property: rotation; to: 0 360 0; dur: 10000; easing: linear; loop: true">
+      </a-sphere>
+
+      <!-- Mercury -->
+      <a-sphere
+        radius="0.2"
+        src="#mercury-tex"
+        orbit="radius: 4; speed: 2.0; offset: 0"
+        animation="property: rotation; to: 0 360 0; dur: 3000; easing: linear; loop: true">
+      </a-sphere>
+
+      <!-- Venus -->
+      <a-sphere
+        radius="0.35"
+        src="#venus-tex"
+        orbit="radius: 6; speed: 1.4; offset: 1"
+        animation="property: rotation; to: 0 360 0; dur: 4000; easing: linear; loop: true">
+      </a-sphere>
+
+      <!-- Earth -->
+      <a-sphere
+        radius="0.4"
+        src="#earth-tex"
+        orbit="radius: 8.5; speed: 1.0; offset: 2"
+        animation="property: rotation; to: 0 360 0; dur: 5000; easing: linear; loop: true">
+      </a-sphere>
+
+      <!-- Mars -->
+      <a-sphere
+        radius="0.3"
+        src="#mars-tex"
+        orbit="radius: 11; speed: 0.7; offset: 4"
+        animation="property: rotation; to: 0 360 0; dur: 6000; easing: linear; loop: true">
+      </a-sphere>
+
+      <!-- Camera with WASD controls -->
+      <a-entity position="0 2 20">
+        <a-camera wasd-controls look-controls>
+          <a-cursor color="white"></a-cursor>
+        </a-camera>
+      </a-entity>
+
+    </a-scene>
+  </body>
+</html>
